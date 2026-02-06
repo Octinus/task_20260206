@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace EmergencyContactApi.Controllers.Employee
+namespace EmergencyContactApi.Controllers.Employees
 {
     /// <summary>
     /// 직원 조회 관련 API를 제공하는 컨트롤러.

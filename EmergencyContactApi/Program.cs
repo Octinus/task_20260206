@@ -1,4 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
+using EmergencyContactApi.DataStorages.InMemory;
+using EmergencyContactApi.DataStorages.Interfaces;
+using EmergencyContactApi.Services.Interfaces.Employees;
+using EmergencyContactApi.Services.ServiceImpls.Employees;
 using System.Reflection;
 
 namespace EmergencyContactApi
@@ -20,6 +23,9 @@ namespace EmergencyContactApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 option.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
             });
+
+            builder.Services.AddScoped<IEmployeeStorage, InMemoryEmployeeStorage>();
+            builder.Services.AddScoped<IRegisterService, RegisterImpl>();
 
             var app = builder.Build();
 
