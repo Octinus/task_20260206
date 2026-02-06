@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EmergencyContactApi.Models.Employees
+namespace EmergencyContactApi.Models.EmployeeDto
 {
     public record AddDto
     {

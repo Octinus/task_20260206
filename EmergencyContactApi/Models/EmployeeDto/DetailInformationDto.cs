@@ -1,4 +1,4 @@
-﻿namespace EmergencyContactApi.Models.Employees
+﻿namespace EmergencyContactApi.Models.EmployeeDto
 {
     public record DetailInformationDto
     {

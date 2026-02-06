@@ -1,4 +1,4 @@
-﻿using EmergencyContactApi.Models.Employees;
+﻿using EmergencyContactApi.Models.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmergencyContactApi.Controllers.Employee
