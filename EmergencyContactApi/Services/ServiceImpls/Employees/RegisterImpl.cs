@@ -24,8 +24,8 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                 return new ApiResponse<RegisterResult>
                 {
                     Success = false,
-                    Result = new RegisterResult(false, 0, "파일업로드, 직접입력 둘중 하나만 입력해주세요."),
-                    Error = "Too much data provided"
+                    Result = null,
+                    Error = "파일업로드, 직접입력 둘중 하나만 입력해주세요."
                 };
             }
             else if(hasFile && !hasRawString)
@@ -41,8 +41,8 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                 return new ApiResponse<RegisterResult>
                 {
                     Success = false,
-                    Result = new RegisterResult(false,0,"직원등록에 필요한 정보가 없습니다."),
-                    Error = "No data provided"
+                    Result = null,
+                    Error = "File, RawString 아무것도 없습니다."
                 };
             }
         }
