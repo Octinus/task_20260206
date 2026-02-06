@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EmergencyContactApi.Models
+﻿namespace EmergencyContactApi.Models.Entity
 {
     public class Employee
     {

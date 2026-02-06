@@ -1,5 +1,4 @@
-﻿using EmergencyContactApi.Models.Dto;
-using Microsoft.AspNetCore.Http;
+﻿using EmergencyContactApi.Models.Employees;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmergencyContactApi.Controllers.Employee
@@ -16,7 +15,7 @@ namespace EmergencyContactApi.Controllers.Employee
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddEmployee([FromForm] EmployeeAddRequest request)
+        public IActionResult AddEmployee([FromForm] ImportRequest request)
         {
             return null;
         }

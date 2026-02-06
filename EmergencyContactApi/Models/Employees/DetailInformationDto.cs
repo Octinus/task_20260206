@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EmergencyContactApi.Models.Dto
+﻿namespace EmergencyContactApi.Models.Employees
 {
     public record DetailInformationDto
     {

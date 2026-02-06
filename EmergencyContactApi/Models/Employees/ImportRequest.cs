@@ -1,4 +1,4 @@
-﻿namespace EmergencyContactApi.Models.Employee
+﻿namespace EmergencyContactApi.Models.Employees
 {
     public class ImportRequest
     {

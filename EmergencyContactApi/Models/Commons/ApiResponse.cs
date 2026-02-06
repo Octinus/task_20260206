@@ -1,4 +1,4 @@
-﻿namespace EmergencyContactApi.Models.Common
+﻿namespace EmergencyContactApi.Models.Commons
 {
     public class ApiResponse<T>
     {

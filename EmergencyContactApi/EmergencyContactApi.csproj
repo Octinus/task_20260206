@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="Services\ServiceImpls\" />
+    <Folder Include="Services\Interfaces\Employee\" />
+    <Folder Include="Services\ServiceImpls\Employee\" />
   </ItemGroup>
 
 </Project>
