@@ -1,6 +1,6 @@
 @EmergencyContactApi_HostAddress = http://localhost:5225
 
-GET {{EmergencyContactApi_HostAddress}}/weatherforecast/
+GET {{EmergencyContactApi_HostAddress}}/api/employee/
 Accept: application/json
 
 ###
