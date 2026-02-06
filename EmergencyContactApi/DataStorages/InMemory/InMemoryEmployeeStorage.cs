@@ -1,5 +1,8 @@
 ﻿using EmergencyContactApi.DataStorages.Interfaces;
+using EmergencyContactApi.Helpers;
+using EmergencyContactApi.Models.EmployeeDto;
 using EmergencyContactApi.Models.Entity;
+using EmergencyContactApi.Models.Request;
 
 namespace EmergencyContactApi.DataStorages.InMemory
 {
@@ -10,11 +13,18 @@ namespace EmergencyContactApi.DataStorages.InMemory
         /// <summary>
         /// Service 구현체에서 검증된 paramter로 직원List를 추가.
         /// </summary>
-        /// <param name="employees"></param>
-        public void AddEmployees(List<Employee> employees)
+        /// <param name="dtos"></param>
+        public void AddEmployees(List<AddDto> dtos)
         {
-            foreach (var employee in employees)
+            foreach (var dto in dtos)
             {
+                var employee = new Employee(
+                                    dto.Name,
+                                    dto.Email,
+                                    dto.Tel,
+                                    ImportRequestParser.ParseJoined(dto.Joined) 
+                                );
+
                 _employees.Add(employee);
             }
         }

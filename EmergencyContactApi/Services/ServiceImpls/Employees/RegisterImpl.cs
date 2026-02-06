@@ -1,9 +1,11 @@
 ﻿using EmergencyContactApi.DataStorages.Interfaces;
 using EmergencyContactApi.Helpers;
 using EmergencyContactApi.Models.Commons;
+using EmergencyContactApi.Models.EmployeeDto;
 using EmergencyContactApi.Models.Request;
 using EmergencyContactApi.Models.Results;
 using EmergencyContactApi.Services.Interfaces.Employees;
+using System.Text.Json;
 
 namespace EmergencyContactApi.Services.ServiceImpls.Employees
 {
@@ -35,13 +37,44 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                 if (hasFile)
                 {
                     string fileName = ImportRequestParser.GetFileName(request.FormFile);
-                    string fileExtsion = ImportRequestParser.CheckFileFormat(fileName);
-                    return null;
+                    string fileExtsion = ImportRequestParser.GetFileFormat(fileName);
+                    string fileContent = ImportRequestParser.GetFileContent(request.FormFile);
+
+                    if (string.Equals(fileExtsion, "json"))
+                    {
+                        List<AddDto> addDtos = JsonSerializer.Deserialize<List<AddDto>>(fileContent, new JsonSerializerOptions {
+                                                                                                                                PropertyNameCaseInsensitive = true
+                                                                                                                            })!;
+                        if (addDtos == null || addDtos.Count == 0)
+                            throw new Exception("JSON이 비어 있습니다.");
+                        ImportRequestParser.ValidateDtos(addDtos);
+                        _employeeStorage.AddEmployees(addDtos);
+
+                        return new ApiResponse<RegisterResult>
+                        {
+                            Success = true,
+                            Result = new RegisterResult(true, addDtos.Count, null),
+                            Error = null
+                        };
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                 {
                     return null;
                 }
+            }
+            catch (JsonException jsonEx)
+            {
+                return new ApiResponse<RegisterResult>
+                {
+                    Success = false,
+                    Result = null,
+                    Error = "Json 형식이 맞지 않습니다."
+                };
             }
             catch (Exception ex)
             {
@@ -51,7 +84,6 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                     Result = null,
                     Error = ex.Message
                 };
-
             }
         }
     }
