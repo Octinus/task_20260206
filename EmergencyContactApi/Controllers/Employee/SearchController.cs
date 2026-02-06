@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace EmergencyContactApi.Controllers.Employee
 {
     /// <summary>
-    /// 직원 조회 관련 API를 제공하는 컨트롤러.
+    /// 
     /// </summary>
     [Route("api/employee")]
     [ApiController]
@@ -18,8 +18,8 @@ namespace EmergencyContactApi.Controllers.Employee
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetEmployees([FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "page는 최소 1이상입니다.")] int page,
-                                          [FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "pageSize는 최소 1이상입니다.")] int pageSize) {
+        public IActionResult GetEmployees([FromQuery, Required] int page,
+                                          [FromQuery, Required] int pageSize) {
 
             return null;
         }
