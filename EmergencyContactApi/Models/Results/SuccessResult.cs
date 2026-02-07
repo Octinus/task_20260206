@@ -1,9 +1,9 @@
-﻿using EmergencyContactApi.Models.EmployeeDto;
+﻿using EmergencyContactApi.Models.Entity;
 
 namespace EmergencyContactApi.Models.Results
 {
     public class SuccessResult
     {
-        public AddDto SucceededDto { get; set; }
+        public Employee Succeeded { get; set; }
     }
 }

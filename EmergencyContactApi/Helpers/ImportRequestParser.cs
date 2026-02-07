@@ -171,6 +171,8 @@ namespace EmergencyContactApi.Helpers
                 addDtos.Add(dto);
             }
 
+            ValidateDtos(addDtos);
+
             return addDtos;
         }
 
@@ -182,19 +184,11 @@ namespace EmergencyContactApi.Helpers
         /// <exception cref="FormatException"></exception>
         public static DateTime ParseJoined(string joined)
         {
-            if (string.IsNullOrWhiteSpace(joined))
-                throw new FormatException("joined 값이 없습니다.");
-
             joined = joined.Trim();
 
             string[] formats = { "yyyy.MM.dd", "yyyy-MM-dd" };
 
             if (DateTime.TryParseExact(joined, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
-            {
-                return dt.Date;
-            }
-
-            if (DateTime.TryParse(joined, CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
             {
                 return dt.Date;
             }

@@ -1,6 +1,8 @@
 ﻿using EmergencyContactApi.DataStorages.Interfaces;
 using EmergencyContactApi.Helpers;
 using EmergencyContactApi.Models.Commons;
+using EmergencyContactApi.Models.EmployeeDto;
+using EmergencyContactApi.Models.Entity;
 using EmergencyContactApi.Models.Request;
 using EmergencyContactApi.Models.Results;
 using EmergencyContactApi.Services.Interfaces.Employees;
@@ -34,7 +36,7 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                     throw new Exception("파일업로드, 직접입력 아무것도 없습니다.");
                 }
 
-                RegisterResult result;
+                List<AddDto> addDtos = new();
 
                 if (hasFile)
                 {
@@ -44,13 +46,11 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
 
                     if (fileExtsion == AllowedFileExtension.Json)
                     {
-                        var addDtos = ImportRequestParser.JsonContentParser(fileContent);
-                        result = _employeeStorage.AddEmployees(addDtos);
+                        addDtos = ImportRequestParser.JsonContentParser(fileContent);
                     }
                     else
                     {
-                        var addDtos = ImportRequestParser.CsvContentParser(fileContent);
-                        result = _employeeStorage.AddEmployees(addDtos);
+                        addDtos = ImportRequestParser.CsvContentParser(fileContent);
                     }
                 }
                 else
@@ -59,15 +59,23 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                     
                     if(ImportRequestParser.CheckRawStringFormat(rawString) == AllowedFileExtension.Json)
                     {
-                        var addDtos = ImportRequestParser.JsonContentParser(rawString);
-                        result = _employeeStorage.AddEmployees(addDtos);
+                        addDtos = ImportRequestParser.JsonContentParser(rawString);
                     }
                     else
                     {
-                        var addDtos = ImportRequestParser.CsvContentParser(rawString);
-                        result = _employeeStorage.AddEmployees(addDtos);
+                        addDtos = ImportRequestParser.CsvContentParser(rawString);
                     }
                 }
+
+                List<Employee> employees = new();
+                foreach (var dto in addDtos)
+                {
+                    var normalizedTel = dto.Tel.Replace("-", "");
+
+                    employees.Add(new Employee(dto.Name, dto.Email, normalizedTel, ImportRequestParser.ParseJoined(dto.Joined)));
+                }
+
+                RegisterResult result = _employeeStorage.AddEmployees(employees);
 
                 return new ApiResponse<RegisterResult>
                 {

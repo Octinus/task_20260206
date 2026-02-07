@@ -1,7 +1,5 @@
 ﻿using EmergencyContactApi.DataStorages.Interfaces;
-using EmergencyContactApi.Helpers;
 using EmergencyContactApi.Models.Commons;
-using EmergencyContactApi.Models.EmployeeDto;
 using EmergencyContactApi.Models.Entity;
 using EmergencyContactApi.Models.Results;
 
@@ -14,51 +12,35 @@ namespace EmergencyContactApi.DataStorages.InMemory
         /// <summary>
         /// Service 구현체에서 검증된 paramter로 직원List를 추가.
         /// </summary>
-        /// <param name="dtos"></param>
-        public RegisterResult AddEmployees(List<AddDto> dtos)
+        /// <param name="employees"></param>
+        public RegisterResult AddEmployees(List<Employee> employees)
         {
             var successResults = new List<SuccessResult>();
             var failureResults = new List<FailureResult>();
 
-            foreach (var dto in dtos)
+            foreach (var employee in employees)
             {
-                DateTime joined;
-                try
-                {
-                    joined = ImportRequestParser.ParseJoined(dto.Joined);
-                }
-                catch (Exception ex)
-                {
-                    failureResults.Add(new FailureResult
-                    {
-                        FailedDto = dto,
-                        Reason = ex.Message
-                    });
-                    continue;
-                }
-
-                bool isDup = _employees.Any(e => string.Equals(e.Name, dto.Name, StringComparison.Ordinal) &&
-                                                 string.Equals(e.Email, dto.Email, StringComparison.Ordinal) &&
-                                                 string.Equals(e.Tel, dto.Tel, StringComparison.Ordinal) &&
-                                                 e.Joined.Date == joined.Date
+                bool isDup = _employees.Any(e => string.Equals(e.Name, employee.Name, StringComparison.Ordinal) &&
+                                                 string.Equals(e.Email, employee.Email, StringComparison.Ordinal) &&
+                                                 string.Equals(e.Tel, employee.Tel, StringComparison.Ordinal) &&
+                                                 e.Joined.Date == employee.Joined.Date
                                             );
 
                 if (isDup)
                 {
                     failureResults.Add(new FailureResult
                     {
-                        FailedDto = dto,
+                        Failed = employee,
                         Reason = "이미 등록된 직원정보입니다."
                     });
                     continue;
                 }
 
-                var employee = new Employee(dto.Name, dto.Email, dto.Tel, joined);
                 _employees.Add(employee);
 
                 successResults.Add(new SuccessResult
                 {
-                    SucceededDto = dto
+                    Succeeded = employee
                 });
             }
 
