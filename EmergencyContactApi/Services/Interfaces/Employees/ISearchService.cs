@@ -1,11 +1,12 @@
 ﻿using EmergencyContactApi.Models.Commons;
 using EmergencyContactApi.Models.EmployeeDto;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EmergencyContactApi.Services.Interfaces.Employees
 {
     public interface ISearchService
     {
-        ApiResponse<PagedListDto> GetEmployeePagedList(int page, int pageSize);
+        ApiResponse<PagedResult<DetailInformationDto>> GetEmployeePagedList(int page, int pageSize);
         ApiResponse<DetailInformationDto> GetEmployeeByName(string name);
     }
 }

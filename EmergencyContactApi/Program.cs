@@ -26,6 +26,7 @@ namespace EmergencyContactApi
 
             builder.Services.AddScoped<IEmployeeStorage, InMemoryEmployeeStorage>();
             builder.Services.AddScoped<IRegisterService, RegisterImpl>();
+            builder.Services.AddScoped<ISearchService, SearchImpl>();
 
             var app = builder.Build();
 

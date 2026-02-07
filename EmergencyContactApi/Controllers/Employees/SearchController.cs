@@ -33,7 +33,7 @@ namespace EmergencyContactApi.Controllers.Employees
         public IActionResult GetEmployeePagedList([FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "page는 최소 1이상입니다.")] int page,
                                           [FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "pageSize는 최소 1이상입니다.")] int pageSize) {
 
-            ApiResponse<PagedListDto> apiResponse = _searchService.GetEmployeePagedList(page, pageSize);
+            ApiResponse<PagedResult<DetailInformationDto>> apiResponse = _searchService.GetEmployeePagedList(page, pageSize);
             if (apiResponse.Success)
                 return new ObjectResult(apiResponse) { StatusCode = 200 };
             else

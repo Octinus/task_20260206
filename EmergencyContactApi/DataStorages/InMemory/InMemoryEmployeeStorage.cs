@@ -1,5 +1,6 @@
 ﻿using EmergencyContactApi.DataStorages.Interfaces;
 using EmergencyContactApi.Helpers;
+using EmergencyContactApi.Models.Commons;
 using EmergencyContactApi.Models.EmployeeDto;
 using EmergencyContactApi.Models.Entity;
 using EmergencyContactApi.Models.Request;
@@ -81,9 +82,14 @@ namespace EmergencyContactApi.DataStorages.InMemory
         /// <param name="page"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public List<Employee> GetEmployeePagedList(int page, int pageSize)
+        public PagedResult<Employee> GetEmployeePagedList(int page, int pageSize)
         {
-            return _employees.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            return new PagedResult<Employee> { 
+                Items = _employees.Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = _employees.Count
+            };
         }
     }
 }
