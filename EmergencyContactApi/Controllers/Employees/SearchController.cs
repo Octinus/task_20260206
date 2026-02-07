@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EmergencyContactApi.Services.Interfaces.Employees;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace EmergencyContactApi.Controllers.Employees
@@ -11,6 +12,13 @@ namespace EmergencyContactApi.Controllers.Employees
     [Tags("Employee")]
     public class SearchController : ControllerBase
     {
+        private readonly ISearchService _searchService;
+
+        public SearchController(ISearchService searchService)
+        {
+            _searchService = searchService;
+        }
+
         /// <summary>
         /// 페이징이 가능하도록 전체 직원 데이터를 조회.
         /// </summary>
@@ -18,7 +26,7 @@ namespace EmergencyContactApi.Controllers.Employees
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetEmployees([FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "page는 최소 1이상입니다.")] int page,
+        public IActionResult GetEmployeePagedList([FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "page는 최소 1이상입니다.")] int page,
                                           [FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "pageSize는 최소 1이상입니다.")] int pageSize) {
 
             return null;
