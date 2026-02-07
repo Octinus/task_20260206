@@ -37,6 +37,7 @@ namespace EmergencyContactApi.Helpers
                 string extension = Path.GetExtension(fileName);
                 if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
                     return AllowedFileExtension.Json;
+
                 if (string.Equals(extension, ".csv", StringComparison.OrdinalIgnoreCase))
                     return AllowedFileExtension.Csv;
                 throw new ArgumentException("지원하지 않는 확장자의 파일입니다.");
@@ -57,7 +58,12 @@ namespace EmergencyContactApi.Helpers
         {
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
-                return reader.ReadToEnd();
+                string content =  reader.ReadToEnd();
+
+                if (string.IsNullOrWhiteSpace(content))
+                    throw new Exception("파일에 아무 내용이 없습니다.");
+
+                return content;
             }
         }
 

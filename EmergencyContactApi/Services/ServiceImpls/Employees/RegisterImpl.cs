@@ -35,6 +35,8 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                     throw new Exception("파일업로드, 직접입력 아무것도 없습니다.");
                 }
 
+                RegisterResult result;
+
                 if (hasFile)
                 {
                     string fileName = ImportRequestParser.GetFileName(request.FormFile);
@@ -52,14 +54,14 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                         if (ImportRequestParser.IsJsonArray(fileContent))
                         {
                             addDtos = JsonSerializer.Deserialize<List<AddDto>>(fileContent, option);
-                        }                            
+                        }
                         else
                         {
                             AddDto addDto = JsonSerializer.Deserialize<AddDto>(fileContent, option);
                             if (addDto == null)
                                 throw new Exception("JSON이 비어 있습니다.");
 
-                            addDtos.Add(addDto);                            
+                            addDtos.Add(addDto);
                         }
 
                         if (addDtos == null || addDtos.Count == 0)
@@ -67,24 +69,47 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
 
                         ImportRequestParser.ValidateDtos(addDtos);
 
-                        RegisterResult result = _employeeStorage.AddEmployees(addDtos);
-
-                        return new ApiResponse<RegisterResult>
-                        {
-                            Success = true,
-                            Result = result,
-                            Error = null
-                        };
+                        result = _employeeStorage.AddEmployees(addDtos);
                     }
                     else
                     {
-                        return null;
+                        var csvDtos = fileContent.Replace("\r\n", "\n")
+                                                 .Replace("\r", "\n")
+                                                 .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                        for (int i = 0; i < csvDtos.Length; i++)
+                        {
+                            var csvDto = csvDtos[i];
+                            var csvDtoCol = csvDto.Split(',', StringSplitOptions.TrimEntries);
+
+                            if (csvDtoCol.Length < 4 || csvDtoCol.Length > 4)
+                                throw new Exception($"등록 가능한 형식에 맞지 않는 구성입니다. 파일내용을 확인해주세요. ([{i + 1}행] 컬럼수 오류)");
+
+                            var dto = new AddDto
+                            {
+                                Name = csvDtoCol[0],
+                                Email = csvDtoCol[1],
+                                Tel = csvDtoCol[2],
+                                Joined = csvDtoCol[3]
+                            };
+
+                            addDtos.Add(dto);
+                        }
+
+                        result = _employeeStorage.AddEmployees(addDtos);
                     }
                 }
                 else
                 {
                     return null;
                 }
+
+                return new ApiResponse<RegisterResult>
+                {
+                    Success = true,
+                    Result = result,
+                    Error = null
+                };
             }
             catch (JsonException jsonEx)
             {
