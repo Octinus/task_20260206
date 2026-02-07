@@ -18,22 +18,13 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
             _employeeStorage = employeeStorage;
         }
 
-        public ApiResponse<DetailInformationDto> GetEmployeeByName(string name)
+        public ApiResponse<List<DetailInformationDto>> GetEmployeeByName(string name)
         {
-            Employee? result = _employeeStorage.GetEmployeeByName(name);
-            if(result is null)
-            {
-                return new ApiResponse<DetailInformationDto>
-                {
-                    Success = true,
-                    Result = null,
-                    Error = null
-                };
-            }
+            List<Employee> result = _employeeStorage.GetEmployeeByName(name);
+            
+            var dto = result.Select(e => new DetailInformationDto(e.Name, e.Email, e.Tel, e.Joined)).ToList();
 
-            var dto = new DetailInformationDto(result.Name, result.Email, result.Tel, result.Joined);
-
-            return new ApiResponse<DetailInformationDto>
+            return new ApiResponse<List<DetailInformationDto>>
             {
                 Success = true,
                 Result = dto,

@@ -7,6 +7,6 @@ namespace EmergencyContactApi.Services.Interfaces.Employees
     public interface ISearchService
     {
         ApiResponse<PagedResult<DetailInformationDto>> GetEmployeePagedList(int page, int pageSize);
-        ApiResponse<DetailInformationDto> GetEmployeeByName(string name);
+        ApiResponse<List<DetailInformationDto>> GetEmployeeByName(string name);
     }
 }

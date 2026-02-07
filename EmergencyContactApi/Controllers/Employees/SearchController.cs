@@ -51,7 +51,7 @@ namespace EmergencyContactApi.Controllers.Employees
                                                 MinLength(2, ErrorMessage = "이름은 최소 2자 이상이어야 합니다.")]
                                                 string name) {
 
-            ApiResponse<DetailInformationDto> apiResponse = _searchService.GetEmployeeByName(name);
+            ApiResponse<List<DetailInformationDto>> apiResponse = _searchService.GetEmployeeByName(name);
             if (apiResponse.Success)
                 return new ObjectResult(apiResponse) { StatusCode = 200 };
             else

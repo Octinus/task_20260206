@@ -71,9 +71,9 @@ namespace EmergencyContactApi.DataStorages.InMemory
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Employee? GetEmployeeByName(string name)
+        public List<Employee> GetEmployeeByName(string name)
         {
-            return _employees.FirstOrDefault(employee => employee.Name.Equals(name, StringComparison.Ordinal));
+            return _employees.Where(employee => employee.Name.Equals(name, StringComparison.Ordinal)).ToList();
         }
 
         /// <summary>
