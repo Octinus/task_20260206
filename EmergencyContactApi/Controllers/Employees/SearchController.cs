@@ -44,7 +44,7 @@ namespace EmergencyContactApi.Controllers.Employees
         /// 직원의 이름을 기준으로 상세 연락 정보를 조회.
         /// 동일한 이름을 가진 직원이 여러 명인 경우 목록으로 반환.
         /// </summary>
-        /// <param name="name">조회할 직원의 이름</param>
+        /// <param name="name">조회할 직원의 이름(한글,영문만)</param>
         /// <returns></returns>
         [HttpGet("{name}")]
         public IActionResult GetEmployeeByName([FromRoute,

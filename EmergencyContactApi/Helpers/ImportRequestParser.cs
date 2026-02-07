@@ -1,6 +1,7 @@
 ﻿using EmergencyContactApi.Models.EmployeeDto;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text;
 
 namespace EmergencyContactApi.Helpers
 {
@@ -56,7 +57,7 @@ namespace EmergencyContactApi.Helpers
         /// <returns></returns>
         public static string GetFileContent(IFormFile file)
         {
-            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8))
             {
                 string content =  reader.ReadToEnd();
 

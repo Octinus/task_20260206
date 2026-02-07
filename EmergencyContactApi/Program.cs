@@ -1,8 +1,10 @@
 using EmergencyContactApi.DataStorages.InMemory;
 using EmergencyContactApi.DataStorages.Interfaces;
 using EmergencyContactApi.DI;
+using EmergencyContactApi.Middleware;
 using EmergencyContactApi.Services.Interfaces.Employees;
 using EmergencyContactApi.Services.ServiceImpls.Employees;
+using Serilog;
 using System.Reflection;
 
 namespace EmergencyContactApi
@@ -12,6 +14,10 @@ namespace EmergencyContactApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
+                                                  .WriteTo.Async(con => con.Console())
+                                                  .CreateLogger();
+            builder.Services.AddSerilog();
 
             // Add services to the container.
 
@@ -28,6 +34,9 @@ namespace EmergencyContactApi
             builder.Services.AddServices();
             builder.Services.AddStorage();
 
+            builder.Services.AddTransient<RequestLoggingMiddleware>();
+            builder.Services.AddTransient<ResponseLoggingMiddleware>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -36,6 +45,9 @@ namespace EmergencyContactApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<RequestLoggingMiddleware>();
+            app.UseMiddleware<ResponseLoggingMiddleware>();
 
             app.UseHttpsRedirection();
 
