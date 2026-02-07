@@ -133,14 +133,14 @@ namespace EmergencyContactApi.Helpers
         }
 
 
-        public static string CheckRawStringFormat(string payload)
+        public static AllowedFileExtension CheckRawStringFormat(string rawString)
         {
-            var start = payload.TrimStart();
+            var start = rawString.TrimStart();
 
             if (start.StartsWith("{") || start.StartsWith("["))
-                return "json";
+                return AllowedFileExtension.Json;
 
-            return "csv";
+            return AllowedFileExtension.Csv;
         }
     }
 }

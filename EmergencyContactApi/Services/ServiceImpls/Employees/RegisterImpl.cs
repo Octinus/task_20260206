@@ -22,7 +22,7 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
         public ApiResponse<RegisterResult> AddEmployees(ImportRequest request)
         {
             bool hasFile = request.FormFile is not null;
-            bool hasRawString = request.RawString is not null;
+            bool hasRawString = !string.IsNullOrEmpty(request.RawString);
             try
             {
                 if (hasFile && hasRawString)
@@ -35,6 +35,7 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                     throw new Exception("파일업로드, 직접입력 아무것도 없습니다.");
                 }
 
+                List<AddDto> addDtos = new();
                 RegisterResult result;
 
                 if (hasFile)
@@ -43,7 +44,6 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                     AllowedFileExtension fileExtsion = ImportRequestParser.GetFileFormat(fileName);
                     string fileContent = ImportRequestParser.GetFileContent(request.FormFile);
 
-                    List<AddDto> addDtos = new();
                     if (fileExtsion == AllowedFileExtension.Json)
                     {
                         var option = new JsonSerializerOptions
@@ -101,7 +101,62 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                 }
                 else
                 {
-                    return null;
+                    string rawString = request.RawString;
+                    
+                    if(ImportRequestParser.CheckRawStringFormat(rawString) == AllowedFileExtension.Json)
+                    {
+                        var option = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                        if (ImportRequestParser.IsJsonArray(rawString))
+                        {
+                            addDtos = JsonSerializer.Deserialize<List<AddDto>>(rawString, option);
+                        }
+                        else
+                        {
+                            AddDto addDto = JsonSerializer.Deserialize<AddDto>(rawString, option);
+                            if (addDto == null)
+                                throw new Exception("JSON이 비어 있습니다.");
+
+                            addDtos.Add(addDto);
+                        }
+
+                        if (addDtos == null || addDtos.Count == 0)
+                            throw new Exception("JSON이 비어 있습니다.");
+
+                        ImportRequestParser.ValidateDtos(addDtos);
+
+                        result = _employeeStorage.AddEmployees(addDtos);
+                    }
+                    else
+                    {
+                        var csvDtos = rawString.Replace("\r\n", "\n")
+                                                 .Replace("\r", "\n")
+                                                 .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                        for (int i = 0; i < csvDtos.Length; i++)
+                        {
+                            var csvDto = csvDtos[i];
+                            var csvDtoCol = csvDto.Split(',', StringSplitOptions.TrimEntries);
+
+                            if (csvDtoCol.Length < 4 || csvDtoCol.Length > 4)
+                                throw new Exception($"등록 가능한 형식에 맞지 않는 구성입니다. 파일내용을 확인해주세요. ([{i + 1}행] 컬럼수 오류)");
+
+                            var dto = new AddDto
+                            {
+                                Name = csvDtoCol[0],
+                                Email = csvDtoCol[1],
+                                Tel = csvDtoCol[2],
+                                Joined = csvDtoCol[3]
+                            };
+
+                            addDtos.Add(dto);
+                        }
+
+                        result = _employeeStorage.AddEmployees(addDtos);
+                    }
                 }
 
                 return new ApiResponse<RegisterResult>
@@ -111,7 +166,7 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                     Error = null
                 };
             }
-            catch (JsonException jsonEx)
+            catch (JsonException)
             {
                 return new ApiResponse<RegisterResult>
                 {
