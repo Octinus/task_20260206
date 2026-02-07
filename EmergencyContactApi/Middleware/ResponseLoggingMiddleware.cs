@@ -1,6 +1,4 @@
 ﻿using EmergencyContactApi.Models.Logging;
-using System.Text;
-using System.Text.Json;
 
 namespace EmergencyContactApi.Middleware
 {

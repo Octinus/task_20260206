@@ -3,7 +3,6 @@ using EmergencyContactApi.Helpers;
 using EmergencyContactApi.Models.Commons;
 using EmergencyContactApi.Models.EmployeeDto;
 using EmergencyContactApi.Models.Entity;
-using EmergencyContactApi.Models.Request;
 using EmergencyContactApi.Models.Results;
 
 namespace EmergencyContactApi.DataStorages.InMemory

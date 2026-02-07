@@ -1,9 +1,5 @@
-using EmergencyContactApi.DataStorages.InMemory;
-using EmergencyContactApi.DataStorages.Interfaces;
 using EmergencyContactApi.DI;
 using EmergencyContactApi.Middleware;
-using EmergencyContactApi.Services.Interfaces.Employees;
-using EmergencyContactApi.Services.ServiceImpls.Employees;
 using Serilog;
 using System.Reflection;
 

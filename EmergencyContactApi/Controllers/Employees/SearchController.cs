@@ -1,9 +1,7 @@
 ﻿using EmergencyContactApi.Models.Commons;
 using EmergencyContactApi.Models.EmployeeDto;
-using EmergencyContactApi.Models.Results;
 using EmergencyContactApi.Services.Interfaces.Employees;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace EmergencyContactApi.Controllers.Employees

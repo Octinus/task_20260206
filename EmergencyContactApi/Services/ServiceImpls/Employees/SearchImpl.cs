@@ -3,9 +3,6 @@ using EmergencyContactApi.Models.Commons;
 using EmergencyContactApi.Models.EmployeeDto;
 using EmergencyContactApi.Models.Entity;
 using EmergencyContactApi.Services.Interfaces.Employees;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace EmergencyContactApi.Services.ServiceImpls.Employees
 {

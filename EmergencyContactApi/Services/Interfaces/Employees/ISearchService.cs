@@ -1,6 +1,5 @@
 ﻿using EmergencyContactApi.Models.Commons;
 using EmergencyContactApi.Models.EmployeeDto;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EmergencyContactApi.Services.Interfaces.Employees
 {
