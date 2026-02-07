@@ -6,12 +6,28 @@ namespace EmergencyContactApi.Helpers
 {
     public static class ImportRequestParser
     {
+        public enum AllowedFileExtension
+        {
+            Json,
+            Csv
+        }
+
+        /// <summary>
+        /// 업로드된 파일이름 반환.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static string GetFileName(IFormFile file)
         {
             return file.FileName;
         }
 
-        public static string GetFileFormat(string? fileName)
+        /// <summary>
+        /// 업로드된 파일의 확장자 반환.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static AllowedFileExtension GetFileFormat(string? fileName)
         {
             try
             {
@@ -20,9 +36,9 @@ namespace EmergencyContactApi.Helpers
 
                 string extension = Path.GetExtension(fileName);
                 if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
-                    return "json";
+                    return AllowedFileExtension.Json;
                 if (string.Equals(extension, ".csv", StringComparison.OrdinalIgnoreCase))
-                    return "csv";
+                    return AllowedFileExtension.Csv;
                 throw new ArgumentException("지원하지 않는 확장자의 파일입니다.");
             }
             catch
@@ -32,6 +48,11 @@ namespace EmergencyContactApi.Helpers
 
         }
 
+        /// <summary>
+        /// 업로드된 파일의 내용을 문자열로 반환.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static string GetFileContent(IFormFile file)
         {
             using (var reader = new StreamReader(file.OpenReadStream()))
@@ -40,6 +61,11 @@ namespace EmergencyContactApi.Helpers
             }
         }
 
+        /// <summary>
+        /// 업로드된 파일 내용 기반의 DTO의 유효성 검증.
+        /// </summary>
+        /// <param name="dtos"></param>
+        /// <exception cref="ValidationException"></exception>
         public static void ValidateDtos(List<AddDto> dtos)
         {
             var results = new List<ValidationResult>();
@@ -57,6 +83,12 @@ namespace EmergencyContactApi.Helpers
             }
         }
 
+        /// <summary>
+        /// 직원정보중 joined 문자열을 DateTime으로 파싱.
+        /// </summary>
+        /// <param name="joined"></param>
+        /// <returns></returns>
+        /// <exception cref="FormatException"></exception>
         public static DateTime ParseJoined(string joined)
         {
             if (string.IsNullOrWhiteSpace(joined))
@@ -78,6 +110,22 @@ namespace EmergencyContactApi.Helpers
 
             throw new FormatException("joined의 날짜 형식이 올바르지 않습니다.");
         }
+
+        /// <summary>
+        /// JSON 문자열이 배열형태인지 단일객체 형태 boolean 반환.
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static bool IsJsonArray(string json)
+        {
+            var start = json.TrimStart();
+
+            if (start.StartsWith("["))
+                return true;
+
+            return false;
+        }
+
 
         public static string CheckRawStringFormat(string payload)
         {

@@ -1,5 +1,6 @@
 ﻿using EmergencyContactApi.Models.EmployeeDto;
 using EmergencyContactApi.Models.Entity;
+using EmergencyContactApi.Models.Results;
 
 namespace EmergencyContactApi.DataStorages.Interfaces
 {
@@ -7,6 +8,6 @@ namespace EmergencyContactApi.DataStorages.Interfaces
     {
         List<Employee> GetEmployeePagedList(int page, int pageSize);
         Employee? GetEmployeeInformationByName(string name);
-        void AddEmployees(List<AddDto> employees);
+        RegisterResult AddEmployees(List<AddDto> employees);
     }
 }

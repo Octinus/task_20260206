@@ -6,6 +6,7 @@ using EmergencyContactApi.Models.Request;
 using EmergencyContactApi.Models.Results;
 using EmergencyContactApi.Services.Interfaces.Employees;
 using System.Text.Json;
+using static EmergencyContactApi.Helpers.ImportRequestParser;
 
 namespace EmergencyContactApi.Services.ServiceImpls.Employees
 {
@@ -37,23 +38,41 @@ namespace EmergencyContactApi.Services.ServiceImpls.Employees
                 if (hasFile)
                 {
                     string fileName = ImportRequestParser.GetFileName(request.FormFile);
-                    string fileExtsion = ImportRequestParser.GetFileFormat(fileName);
+                    AllowedFileExtension fileExtsion = ImportRequestParser.GetFileFormat(fileName);
                     string fileContent = ImportRequestParser.GetFileContent(request.FormFile);
 
-                    if (string.Equals(fileExtsion, "json"))
+                    List<AddDto> addDtos = new();
+                    if (fileExtsion == AllowedFileExtension.Json)
                     {
-                        List<AddDto> addDtos = JsonSerializer.Deserialize<List<AddDto>>(fileContent, new JsonSerializerOptions {
-                                                                                                                                PropertyNameCaseInsensitive = true
-                                                                                                                            })!;
+                        var option = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                        if (ImportRequestParser.IsJsonArray(fileContent))
+                        {
+                            addDtos = JsonSerializer.Deserialize<List<AddDto>>(fileContent, option);
+                        }                            
+                        else
+                        {
+                            AddDto addDto = JsonSerializer.Deserialize<AddDto>(fileContent, option);
+                            if (addDto == null)
+                                throw new Exception("JSON이 비어 있습니다.");
+
+                            addDtos.Add(addDto);                            
+                        }
+
                         if (addDtos == null || addDtos.Count == 0)
                             throw new Exception("JSON이 비어 있습니다.");
+
                         ImportRequestParser.ValidateDtos(addDtos);
-                        _employeeStorage.AddEmployees(addDtos);
+
+                        RegisterResult result = _employeeStorage.AddEmployees(addDtos);
 
                         return new ApiResponse<RegisterResult>
                         {
                             Success = true,
-                            Result = new RegisterResult(true, addDtos.Count, null),
+                            Result = result,
                             Error = null
                         };
                     }

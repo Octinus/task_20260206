@@ -2,15 +2,17 @@
 {
     public class RegisterResult
     {
-        public bool Success { get; private set; }
-        public int AddedCount { get; private set; }
-        public string? ErrorMessage { get; private set;  }
+        public List<SuccessResult> SuccessResults { get; private set; }
+        public int SuccessCount { get; private set; }
+        public List<FailureResult> FailureResults { get; private set; }
+        public int FailureCount { get; private set; }
 
-        public RegisterResult(bool success, int addedCount, string? errorMessage)
+        public RegisterResult(List<SuccessResult> successResults, List<FailureResult> failureResults)
         {
-            Success = success;
-            AddedCount = addedCount;
-            ErrorMessage = errorMessage;
+            SuccessResults = successResults;
+            SuccessCount = successResults.Count;
+            FailureResults = failureResults;
+            FailureCount = failureResults.Count;
         }
     }
 }
