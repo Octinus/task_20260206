@@ -6,8 +6,8 @@ namespace EmergencyContactApi.DataStorages.Interfaces
 {
     public interface IEmployeeStorage
     {
-        List<Employee> GetEmployeePagedList(int page, int pageSize);
-        Employee? GetEmployeeInformationByName(string name);
+        List<Employee>? GetEmployeePagedList(int page, int pageSize);
+        Employee? GetEmployeeByName(string name);
         RegisterResult AddEmployees(List<AddDto> employees);
     }
 }

@@ -1,5 +1,9 @@
-﻿using EmergencyContactApi.Services.Interfaces.Employees;
+﻿using EmergencyContactApi.Models.Commons;
+using EmergencyContactApi.Models.EmployeeDto;
+using EmergencyContactApi.Models.Results;
+using EmergencyContactApi.Services.Interfaces.Employees;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace EmergencyContactApi.Controllers.Employees
@@ -29,7 +33,11 @@ namespace EmergencyContactApi.Controllers.Employees
         public IActionResult GetEmployeePagedList([FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "page는 최소 1이상입니다.")] int page,
                                           [FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "pageSize는 최소 1이상입니다.")] int pageSize) {
 
-            return null;
+            ApiResponse<PagedListDto> apiResponse = _searchService.GetEmployeePagedList(page, pageSize);
+            if (apiResponse.Success)
+                return new ObjectResult(apiResponse) { StatusCode = 200 };
+            else
+                return new ObjectResult(apiResponse) { StatusCode = 400 };
         }
 
         /// <summary>
@@ -43,7 +51,11 @@ namespace EmergencyContactApi.Controllers.Employees
                                                 MinLength(2, ErrorMessage = "이름은 최소 2자 이상이어야 합니다.")]
                                                 string name) {
 
-            return null;
+            ApiResponse<DetailInformationDto> apiResponse = _searchService.GetEmployeeByName(name);
+            if (apiResponse.Success)
+                return new ObjectResult(apiResponse) { StatusCode = 200 };
+            else
+                return new ObjectResult(apiResponse) { StatusCode = 400 };
         }
     }
 }
