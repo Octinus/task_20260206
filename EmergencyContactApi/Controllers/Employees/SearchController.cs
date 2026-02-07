@@ -26,12 +26,12 @@ namespace EmergencyContactApi.Controllers.Employees
         /// <summary>
         /// 페이징이 가능하도록 전체 직원 데이터를 조회.
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
+        /// <param name="page">조회할 페이지 번호(최소1)</param>
+        /// <param name="pageSize">페이지당 조회할 직원수(최소1)</param>
+        /// <returns>페이지정보와 요청 목록를 포함한 결과</returns>
         [HttpGet]
         public IActionResult GetEmployeePagedList([FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "page는 최소 1이상입니다.")] int page,
-                                          [FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "pageSize는 최소 1이상입니다.")] int pageSize) {
+                                                  [FromQuery, Required, Range(1, int.MaxValue, ErrorMessage = "pageSize는 최소 1이상입니다.")] int pageSize) {
 
             ApiResponse<PagedResult<DetailInformationDto>> apiResponse = _searchService.GetEmployeePagedList(page, pageSize);
             if (apiResponse.Success)
@@ -41,9 +41,10 @@ namespace EmergencyContactApi.Controllers.Employees
         }
 
         /// <summary>
-        /// 직원의 이름으로 상세 연락정보를 조회.
+        /// 직원의 이름을 기준으로 상세 연락 정보를 조회.
+        /// 동일한 이름을 가진 직원이 여러 명인 경우 목록으로 반환.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">조회할 직원의 이름</param>
         /// <returns></returns>
         [HttpGet("{name}")]
         public IActionResult GetEmployeeByName([FromRoute,

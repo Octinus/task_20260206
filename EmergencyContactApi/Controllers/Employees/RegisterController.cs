@@ -23,10 +23,11 @@ namespace EmergencyContactApi.Controllers.Employees
 
         /// <summary>
         /// csv 또는 json 형식의 파일을 업로드하거나,
-        /// textarea에서 직접 입력한 데이터를 통해 직원 정보를 등록합니다.
+        /// textarea에서 직접 입력한 데이터를 통해 직원 정보를 등록.
+        /// (단건/다건 등록 가능, 4가지 정보 모두 동일할 경우 중복으로 등록불가)
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">파일업로드 또는 직접 입력한 데이터</param>
+        /// <returns>등록 결과</returns>
         [HttpPost]
         public IActionResult AddEmployees([FromForm] ImportRequest request)
         {

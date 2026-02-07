@@ -1,5 +1,6 @@
 using EmergencyContactApi.DataStorages.InMemory;
 using EmergencyContactApi.DataStorages.Interfaces;
+using EmergencyContactApi.DI;
 using EmergencyContactApi.Services.Interfaces.Employees;
 using EmergencyContactApi.Services.ServiceImpls.Employees;
 using System.Reflection;
@@ -24,9 +25,8 @@ namespace EmergencyContactApi
                 option.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
             });
 
-            builder.Services.AddScoped<IEmployeeStorage, InMemoryEmployeeStorage>();
-            builder.Services.AddScoped<IRegisterService, RegisterImpl>();
-            builder.Services.AddScoped<ISearchService, SearchImpl>();
+            builder.Services.AddServices();
+            builder.Services.AddStorage();
 
             var app = builder.Build();
 
